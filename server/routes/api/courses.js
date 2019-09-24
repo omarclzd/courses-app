@@ -6,4 +6,6 @@ const coursesCtrl = require("../../controllers/courses");
 router.post("/create", coursesCtrl.createCourse);
 router.get("/all", coursesCtrl.getAllCourses);
 
+router.get("/createTest", coursesCtrl.createTest);
+
 module.exports = router;

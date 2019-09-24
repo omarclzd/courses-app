@@ -1,5 +1,12 @@
 import React, { Component } from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Link } from "react-router-dom";
+
+import CoursePage from "./pages/CoursePage";
+import * as ROUTES from "./constants/routes";
+
 import createCourse from "./utils/CreateCourse";
+import createTest from "./utils/CreateTest";
 import "./App.css";
 
 class App extends Component {
@@ -8,6 +15,7 @@ class App extends Component {
 
     this.state = {
       courses: [],
+      test: [],
       name: ""
     };
     this.handleOnChange = this.handleOnChange.bind(this);
@@ -40,9 +48,20 @@ class App extends Component {
     return await createCourse(options);
   }
 
+  async handleAddTest(name) {
+    // const options = {
+    //   method: "POST",
+    //   headers: {
+    //     "content-type": "application/json"
+    //   },
+    //   body: JSON.stringify({ name })
+    // };
+    // return await createTest(options);
+  }
+
   handleOnChange(e) {
     this.setState({
-      name: e.currentTarget.value
+      [e.currentTarget.name]: e.currentTarget.value
     });
   }
 
@@ -54,25 +73,46 @@ class App extends Component {
     });
   }
 
+  async handleTestSubmit(e) {
+    e.preventDefault();
+    // await this.handleAddTest(this.state.name);
+    // this.setState({
+    //   name: ""
+    // });
+  }
+
+  getCourse = id => {
+    return this.state.courses[id];
+  };
+
   render() {
     return (
       <div className="App">
-        <h1>App</h1>
-        {this.state.courses.map((c, idx) => (
-          <div key={idx}>
-            <p>{c.name}</p>
-          </div>
-        ))}
-        <button onClick={() => console.log(this.state)}>State</button>
-        <form>
-          <input
-            type="text"
-            name="name"
-            onChange={this.handleOnChange}
-            value={this.state.name}
+        <Router>
+          <h1>App</h1>
+          {this.state.courses.map((c, id) => (
+            <Link key={c.id} to={`/course/${id}`}>
+              <p>{c.name}</p>
+            </Link>
+          ))}
+          <button onClick={() => console.log(this.state)}>State</button>
+          <form>
+            <input
+              type="text"
+              name="name"
+              onChange={this.handleOnChange}
+              value={this.state.name}
+            />
+            <button onClick={this.handleSubmit}>Add</button>
+          </form>
+          <hr />
+          <Route
+            path={ROUTES.COURSE}
+            render={props => (
+              <CoursePage {...props} getCourse={this.getCourse} />
+            )}
           />
-          <button onClick={this.handleSubmit}>Add</button>
-        </form>
+        </Router>
       </div>
     );
   }

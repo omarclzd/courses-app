@@ -9,8 +9,23 @@ const Test = require("../src/models/test");
 
 module.exports = {
   getAllCourses,
-  createCourse
+  createCourse,
+  createTest
 };
+
+// Course.hasMany(Test, { as: "Tests", foreignKey: "course_id" });
+// Test.belongsTo(Course, { as: "Course", foreignKey: "course_id" });
+
+function createTest(req, res) {
+  Course.hasMany(Test, { as: "Tests", foreignKey: "course_id" });
+  Test.belongsTo(Course, { as: "Course", foreignKey: "course_id" });
+  let name = req.body.name;
+  Test.create({
+    name
+  })
+    .then(test => console.log(test))
+    .catch(err => console.log(err));
+}
 
 function getAllCourses(req, res) {
   Course.findAll()
