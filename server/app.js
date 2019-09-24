@@ -27,6 +27,13 @@ require("./src/database/connection");
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/api/courses", require("./routes/api/courses"));
+
+// The following "catch all" route (note the *)is necessary
+// for a SPA's client-side routing to properly work
+app.get("/*", function(req, res) {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

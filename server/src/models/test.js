@@ -1,6 +1,6 @@
 const Sequelize = require("sequelize");
 
-module.exports = sequelize.define("Test", {
+module.exports = sequelize.define("test", {
   id: {
     type: Sequelize.INTEGER(10),
     allowNull: false,
