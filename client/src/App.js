@@ -14,14 +14,19 @@ class App extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  callServer() {
-    fetch("http://localhost:3001/api/courses/all")
-      .then(res => res.text())
-      .then(res => this.setState({ serverRes: res }));
-  }
+  componentDidMount() {
+    const options = {
+      method: "GET",
+      headers: {
+        "content-type": "application/json"
+      }
+    };
 
-  componentWillMount() {
-    this.callServer();
+    getCourses(options).then(results =>
+      this.setState({
+        courses: results
+      })
+    );
   }
 
   async handleAddCourse(name) {
@@ -53,7 +58,12 @@ class App extends Component {
     return (
       <div className="App">
         <h1>App</h1>
-        <h2>{this.state.serverRes}</h2>
+        {this.state.courses.map((c, idx) => (
+          <div key={idx}>
+            <p>{c.name}</p>
+          </div>
+        ))}
+        <button onClick={() => console.log(this.state)}>State</button>
         <form>
           <input
             type="text"
@@ -69,3 +79,13 @@ class App extends Component {
 }
 
 export default App;
+
+async function getCourses(options) {
+  try {
+    const fetchCourses = await fetch("/api/courses/all", options);
+    const data = await fetchCourses.json();
+    return await data;
+  } catch (error) {
+    console.log(error);
+  }
+}

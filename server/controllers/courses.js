@@ -15,8 +15,7 @@ module.exports = {
 function getAllCourses(req, res) {
   Course.findAll()
     .then(courses => {
-      console.log(courses);
-      res.sendStatus(200);
+      res.status(200).json(courses);
     })
     .catch(err => console.log(err));
 }
@@ -25,4 +24,9 @@ function createCourse(req, res) {
   console.log(req.body);
   let name = req.body.name;
   console.log(name);
+  Course.create({
+    name
+  })
+    .then(course => res.status(201).json(course))
+    .catch(err => console.log(err));
 }
