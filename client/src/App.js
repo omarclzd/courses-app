@@ -4,11 +4,13 @@ import { Link } from "react-router-dom";
 
 import CoursePage from "./pages/CoursePage";
 import UpdateCourse from "./components/Form/Update";
+
 import * as ROUTES from "./constants/routes";
 
 import createCourse from "./utils/CreateCourse";
 import updateCourse from "./utils/UpdateCourse";
 import createTest from "./utils/CreateTest";
+import updateTest from "./utils/UpdateTest";
 import DeleteCourse from "./components/DeleteButton/DeleteCourse";
 import "./App.css";
 
@@ -85,6 +87,17 @@ class App extends Component {
     return await createTest(options);
   }
 
+  async handleUpdateTest({ name, num_of_questions, duration, id }) {
+    const options = {
+      method: "POST",
+      headers: {
+        "content-type": "application/json"
+      },
+      body: JSON.stringify({ name, num_of_questions, duration, id })
+    };
+    return await updateTest(options);
+  }
+
   handleOnChange(e) {
     this.setState({
       [e.currentTarget.name]: e.currentTarget.value
@@ -155,11 +168,11 @@ class App extends Component {
                 {...props}
                 getCourse={this.getCourse}
                 handleAddTest={this.handleAddTest}
+                handleUpdateTest={this.handleUpdateTest}
               />
             )}
           />
 
-          <hr />
           <Route
             path={ROUTES.UPDATE_COURSE}
             render={props => (

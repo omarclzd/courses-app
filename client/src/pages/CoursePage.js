@@ -1,6 +1,10 @@
 import React, { Component } from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Form from "../components/Form";
 import DeleteTest from "../components/DeleteButton/DeleteTest";
+import UpdateTest from "../components/Form/UpdateTest";
+import * as ROUTES from "../constants/routes";
 
 class CoursePage extends Component {
   constructor(props) {
@@ -50,6 +54,10 @@ class CoursePage extends Component {
     return await deleteTests(options);
   };
 
+  getTest = id => {
+    return this.state.tests[id];
+  };
+
   render() {
     let course = this.props.getCourse(this.props.match.params.id);
 
@@ -58,9 +66,12 @@ class CoursePage extends Component {
     let tests = test ? (
       test.map((t, id) => (
         <div key={id}>
-          <p>{t.name}</p>
+          <p>
+            {t.name} id: {t.id}
+          </p>
           <p>{t.course_id}</p>
           <DeleteTest id={t.id} handleDeleteTest={this.handleDeleteTest} />
+          <Link to={`/update-test/${id}`}>Edit</Link>
         </div>
       ))
     ) : (
@@ -69,16 +80,28 @@ class CoursePage extends Component {
 
     return (
       <div>
-        <h1>Course Page</h1>
-        <h2>
-          Course: {course.name}
-          <br />
-          Course Id: {course.id}
-        </h2>
-        <Form courseId={courseId} handleAddTest={this.props.handleAddTest} />
-        <hr />
+        <Router>
+          <h1>Course Page</h1>
+          <h2>
+            Course: {course.name}
+            <br />
+            Course Id: {course.id}
+          </h2>
+          <Form courseId={courseId} handleAddTest={this.props.handleAddTest} />
+          <hr />
 
-        {tests}
+          {tests}
+          <Route
+            path={ROUTES.UPDATE_TEST}
+            render={props => (
+              <UpdateTest
+                {...props}
+                getTest={this.getTest}
+                handleUpdateTest={this.props.handleUpdateTest}
+              />
+            )}
+          />
+        </Router>
       </div>
     );
   }

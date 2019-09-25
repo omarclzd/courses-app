@@ -3,10 +3,6 @@
 const Course = require("../src/models/course");
 const Test = require("../src/models/test");
 
-// //Create Relations
-// Course.hasMany(Test, { as: "Tests", foreignKey: "course_id" });
-// Test.belogsTo(Course, { as: "Course", foreignKey: "course_id" });
-
 module.exports = {
   getAllCourses,
   createCourse,
@@ -14,8 +10,32 @@ module.exports = {
   getTests,
   delTest,
   delCourse,
-  updateCourse
+  updateCourse,
+  updateTest
 };
+
+function updateTest(req, res) {
+  console.log(req.body);
+  let name = req.body.name;
+  let id = req.body.id;
+  let duration = req.body.duration;
+  let num_of_questions = req.body.num_of_questions;
+  Test.findOne({
+    where: { id: id }
+  })
+    .then(test =>
+      test.update(
+        {
+          name,
+          duration,
+          num_of_questions
+        },
+        { returning: true, where: { id: id } }
+      )
+    )
+    .then(test => res.status(201))
+    .catch(err => console.log(err));
+}
 
 function updateCourse(req, res) {
   console.log(req.body);

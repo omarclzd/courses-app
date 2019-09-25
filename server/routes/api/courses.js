@@ -11,5 +11,6 @@ router.post("/updateCourse", coursesCtrl.updateCourse);
 router.post("/createTest", coursesCtrl.createTest);
 router.post("/tests", coursesCtrl.getTests);
 router.post("/deleteTest", coursesCtrl.delTest);
+router.post("/updateTest", coursesCtrl.updateTest);
 
 module.exports = router;
