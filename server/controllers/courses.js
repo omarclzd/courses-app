@@ -1,5 +1,3 @@
-//Require models
-
 const Course = require("../src/models/course");
 const Test = require("../src/models/test");
 
@@ -33,7 +31,7 @@ function updateTest(req, res) {
         { returning: true, where: { id: id } }
       )
     )
-    .then(test => res.status(201))
+    .then(test => res.status(201).json(test))
     .catch(err => console.log(err));
 }
 
@@ -56,7 +54,10 @@ function updateCourse(req, res) {
         { returning: true, where: { id: id } }
       )
     )
-    .then(course => res.status(201))
+    .then(course => Course.findAll())
+    .then(courses => {
+      res.status(200).json(courses);
+    })
     .catch(err => console.log(err));
 }
 
@@ -80,7 +81,7 @@ function delTest(req, res) {
   Test.destroy({
     where: { id: id }
   })
-    .then(test => res.status(201))
+    .then(test => res.status(201).json(test))
     .catch(err => console.log(err));
 }
 
@@ -120,7 +121,6 @@ function createCourse(req, res) {
   let name = req.body.name;
   let domain = req.body.domain;
   let description = req.body.description;
-
   console.log(req.body);
   Course.create({
     name,

@@ -34,7 +34,7 @@ class App extends Component {
 
   getAllCourses() {
     const options = {
-      method: "GET",
+      method: "POST",
       headers: {
         "content-type": "application/json"
       }
@@ -59,7 +59,7 @@ class App extends Component {
       },
       body: JSON.stringify({ id })
     };
-    await deleteCourse(options).then(() => this.getAllCourses());
+    await deleteCourse(options);
   }
 
   async handleAddCourse({ name, domain, description }) {
