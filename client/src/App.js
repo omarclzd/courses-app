@@ -3,9 +3,11 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 import CoursePage from "./pages/CoursePage";
+import UpdateCourse from "./components/Form/Update";
 import * as ROUTES from "./constants/routes";
 
 import createCourse from "./utils/CreateCourse";
+import updateCourse from "./utils/UpdateCourse";
 import createTest from "./utils/CreateTest";
 import DeleteCourse from "./components/DeleteButton/DeleteCourse";
 import "./App.css";
@@ -61,6 +63,17 @@ class App extends Component {
     return await createCourse(options);
   }
 
+  async handleUpdateCourse({ name, domain, description, id }) {
+    const options = {
+      method: "POST",
+      headers: {
+        "content-type": "application/json"
+      },
+      body: JSON.stringify({ name, domain, description, id })
+    };
+    return await updateCourse(options);
+  }
+
   async handleAddTest({ name, num_of_questions, course_id, duration }) {
     const options = {
       method: "POST",
@@ -106,6 +119,7 @@ class App extends Component {
                 id={c.id}
                 handleDeleteCourse={this.handleDeleteCourse}
               />
+              <Link to={`/update-course/${id}`}>Edit</Link>
             </div>
           ))}
           <button onClick={() => console.log(this.state)}>State</button>
@@ -141,6 +155,18 @@ class App extends Component {
                 {...props}
                 getCourse={this.getCourse}
                 handleAddTest={this.handleAddTest}
+              />
+            )}
+          />
+
+          <hr />
+          <Route
+            path={ROUTES.UPDATE_COURSE}
+            render={props => (
+              <UpdateCourse
+                {...props}
+                getCourse={this.getCourse}
+                handleUpdateCourse={this.handleUpdateCourse}
               />
             )}
           />

@@ -6,6 +6,7 @@ const coursesCtrl = require("../../controllers/courses");
 router.post("/create", coursesCtrl.createCourse);
 router.get("/all", coursesCtrl.getAllCourses);
 router.post("/deleteCourse", coursesCtrl.delCourse);
+router.post("/updateCourse", coursesCtrl.updateCourse);
 
 router.post("/createTest", coursesCtrl.createTest);
 router.post("/tests", coursesCtrl.getTests);

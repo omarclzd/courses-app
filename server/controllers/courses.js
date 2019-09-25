@@ -13,8 +13,32 @@ module.exports = {
   createTest,
   getTests,
   delTest,
-  delCourse
+  delCourse,
+  updateCourse
 };
+
+function updateCourse(req, res) {
+  console.log(req.body);
+  let name = req.body.name;
+  let domain = req.body.domain;
+  let description = req.body.description;
+  let id = req.body.id;
+  Course.findOne({
+    where: { id: id }
+  })
+    .then(course =>
+      course.update(
+        {
+          name,
+          domain,
+          description
+        },
+        { returning: true, where: { id: id } }
+      )
+    )
+    .then(course => res.status(201))
+    .catch(err => console.log(err));
+}
 
 function delCourse(req, res) {
   console.log(req.body);
@@ -27,7 +51,6 @@ function delCourse(req, res) {
         where: { course_id: id }
       })
     )
-    .then(test => res.status(201))
     .catch(err => console.log(err));
 }
 
