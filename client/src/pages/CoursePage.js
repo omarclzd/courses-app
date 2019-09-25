@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Form from "../components/Form";
+import DeleteTest from "../components/DeleteButton/DeleteTest";
 
 class CoursePage extends Component {
   constructor(props) {
@@ -9,9 +10,9 @@ class CoursePage extends Component {
     };
   }
 
-  componentDidMount() {
+  updateTest() {
     const options = {
-      method: "GET",
+      method: "POST",
       headers: {
         "content-type": "application/json"
       }
@@ -24,6 +25,10 @@ class CoursePage extends Component {
     );
   }
 
+  componentDidMount() {
+    this.updateTest();
+  }
+
   filterTests = courseId => {
     return this.state.tests.map((t, id) => {
       if (courseId === t.course_id) {
@@ -34,8 +39,15 @@ class CoursePage extends Component {
     });
   };
 
-  handleDelete = e => {
-    console.log(e.currentTarget.id);
+  handleDeleteTest = async id => {
+    const options = {
+      method: "POST",
+      headers: {
+        "content-type": "application/json"
+      },
+      body: JSON.stringify({ id })
+    };
+    return await deleteTests(options);
   };
 
   render() {
@@ -48,9 +60,7 @@ class CoursePage extends Component {
         <div key={id}>
           <p>{t.name}</p>
           <p>{t.course_id}</p>
-          <button onClick={this.handleDelete} id={t.id}>
-            X
-          </button>
+          <DeleteTest id={t.id} handleDeleteTest={this.handleDeleteTest} />
         </div>
       ))
     ) : (
@@ -80,6 +90,16 @@ async function getTests(options) {
   try {
     const fetchTests = await fetch("/api/courses/tests", options);
     const data = await fetchTests.json();
+    return await data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function deleteTests(options) {
+  try {
+    const deleteTest = await fetch("/api/courses/deleteTest", options);
+    const data = await deleteTest.json();
     return await data;
   } catch (error) {
     console.log(error);

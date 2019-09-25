@@ -11,11 +11,35 @@ module.exports = {
   getAllCourses,
   createCourse,
   createTest,
-  getTests
+  getTests,
+  delTest,
+  delCourse
 };
 
-// Course.hasMany(Test, { as: "Tests", foreignKey: "course_id" });
-// Test.belongsTo(Course, { as: "Course", foreignKey: "course_id" });
+function delCourse(req, res) {
+  console.log(req.body);
+  let id = req.body.id;
+  Course.destroy({
+    where: { id: id }
+  })
+    .then(course =>
+      Test.destroy({
+        where: { course_id: id }
+      })
+    )
+    .then(test => res.status(201))
+    .catch(err => console.log(err));
+}
+
+function delTest(req, res) {
+  console.log(req.body);
+  let id = req.body.id;
+  Test.destroy({
+    where: { id: id }
+  })
+    .then(test => res.status(201))
+    .catch(err => console.log(err));
+}
 
 function getTests(req, res) {
   Test.findAll()
@@ -26,8 +50,6 @@ function getTests(req, res) {
 }
 
 function createTest(req, res) {
-  // Course.hasMany(Test, { as: "Tests", foreignKey: "course_id" });
-  // Test.belongsTo(Course, { as: "Course", foreignKey: "course_id" });
   let name = req.body.name;
   let course_id = req.body.course_id;
   let duration = req.body.duration;

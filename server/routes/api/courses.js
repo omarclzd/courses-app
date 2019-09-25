@@ -5,8 +5,10 @@ const coursesCtrl = require("../../controllers/courses");
 /*---------- Public Routes ----------*/
 router.post("/create", coursesCtrl.createCourse);
 router.get("/all", coursesCtrl.getAllCourses);
+router.post("/deleteCourse", coursesCtrl.delCourse);
 
 router.post("/createTest", coursesCtrl.createTest);
-router.get("/tests", coursesCtrl.getTests);
+router.post("/tests", coursesCtrl.getTests);
+router.post("/deleteTest", coursesCtrl.delTest);
 
 module.exports = router;

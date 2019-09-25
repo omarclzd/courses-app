@@ -7,6 +7,7 @@ import * as ROUTES from "./constants/routes";
 
 import createCourse from "./utils/CreateCourse";
 import createTest from "./utils/CreateTest";
+import DeleteCourse from "./components/DeleteButton/DeleteCourse";
 import "./App.css";
 
 class App extends Component {
@@ -36,6 +37,17 @@ class App extends Component {
         courses: results
       })
     );
+  }
+
+  async handleDeleteCourse(id) {
+    const options = {
+      method: "POST",
+      headers: {
+        "content-type": "application/json"
+      },
+      body: JSON.stringify({ id })
+    };
+    return await deleteCourse(options);
   }
 
   async handleAddCourse({ name, domain, description }) {
@@ -86,9 +98,15 @@ class App extends Component {
         <Router>
           <h1>App</h1>
           {this.state.courses.map((c, id) => (
-            <Link key={c.id} to={`/course/${id}`}>
-              <p>{c.name}</p>
-            </Link>
+            <div key={c.id}>
+              <Link to={`/course/${id}`}>
+                <p>{c.name}</p>
+              </Link>
+              <DeleteCourse
+                id={c.id}
+                handleDeleteCourse={this.handleDeleteCourse}
+              />
+            </div>
           ))}
           <button onClick={() => console.log(this.state)}>State</button>
           <form>
@@ -138,6 +156,16 @@ async function getCourses(options) {
   try {
     const fetchCourses = await fetch("/api/courses/all", options);
     const data = await fetchCourses.json();
+    return await data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function deleteCourse(options) {
+  try {
+    const delCourse = await fetch("/api/courses/deleteCourse", options);
+    const data = await delCourse.json();
     return await data;
   } catch (error) {
     console.log(error);
