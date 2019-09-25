@@ -1,3 +1,4 @@
+require("dotenv").config();
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
@@ -21,8 +22,18 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+//database
+require("./src/database/connection");
+
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
+app.use("/api/courses", require("./routes/api/courses"));
+
+// The following "catch all" route (note the *)is necessary
+// for a SPA's client-side routing to properly work
+app.get("/*", function(req, res) {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
