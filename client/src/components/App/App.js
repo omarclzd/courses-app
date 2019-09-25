@@ -1,18 +1,22 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
-import { Link } from "react-router-dom";
-
-import CoursePage from "./pages/CoursePage";
-import UpdateCourse from "./components/Form/Update";
-
-import * as ROUTES from "./constants/routes";
-
-import createCourse from "./utils/CreateCourse";
-import updateCourse from "./utils/UpdateCourse";
-import createTest from "./utils/CreateTest";
-import updateTest from "./utils/UpdateTest";
-import DeleteCourse from "./components/DeleteButton/DeleteCourse";
 import "./App.css";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+
+import CoursePage from "../../pages/CoursePage";
+import Home from "../../pages/Home";
+import Navigation from "../Navigation";
+import CreateCourse from "../Form/CreateCourse";
+
+import UpdateCourse from "../Form/Update";
+import * as ROUTES from "../../constants/routes";
+
+import createCourse from "../../utils/CreateCourse";
+import updateCourse from "../../utils/UpdateCourse";
+import createTest from "../../utils/CreateTest";
+import updateTest from "../../utils/UpdateTest";
+import getCourses from "../../utils/GetCourses";
+import deleteCourse from "../../utils/DeleteCourse";
+import Landing from "../../pages/Landing";
 
 class App extends Component {
   constructor(props) {
@@ -28,7 +32,7 @@ class App extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidMount() {
+  getAllCourses() {
     const options = {
       method: "GET",
       headers: {
@@ -43,6 +47,10 @@ class App extends Component {
     );
   }
 
+  componentDidMount() {
+    this.getAllCourses();
+  }
+
   async handleDeleteCourse(id) {
     const options = {
       method: "POST",
@@ -51,7 +59,7 @@ class App extends Component {
       },
       body: JSON.stringify({ id })
     };
-    return await deleteCourse(options);
+    await deleteCourse(options).then(() => this.getAllCourses());
   }
 
   async handleAddCourse({ name, domain, description }) {
@@ -62,7 +70,7 @@ class App extends Component {
       },
       body: JSON.stringify({ name, domain, description })
     };
-    return await createCourse(options);
+    await createCourse(options).then(() => this.getAllCourses());
   }
 
   async handleUpdateCourse({ name, domain, description, id }) {
@@ -122,45 +130,38 @@ class App extends Component {
     return (
       <div className="App">
         <Router>
-          <h1>App</h1>
-          {this.state.courses.map((c, id) => (
-            <div key={c.id}>
-              <Link to={`/course/${id}`}>
-                <p>{c.name}</p>
-              </Link>
-              <DeleteCourse
-                id={c.id}
+          <Navigation />
+          <Route
+            path={ROUTES.HOME}
+            render={props => (
+              <Home
+                {...props}
+                state={this.state}
                 handleDeleteCourse={this.handleDeleteCourse}
+                handleUpdateCourse={this.handleUpdateCourse}
+                handleOnChange={this.handleOnChange}
+                handleSubmit={this.handleSubmit}
               />
-              <Link to={`/update-course/${id}`}>Edit</Link>
-            </div>
-          ))}
-          <button onClick={() => console.log(this.state)}>State</button>
-          <form>
-            <label>Name</label>
-            <input
-              type="text"
-              name="name"
-              onChange={this.handleOnChange}
-              value={this.state.name}
-            />
-            <label>Domain</label>
-            <input
-              type="text"
-              name="domain"
-              onChange={this.handleOnChange}
-              value={this.state.domain}
-            />
-            <label>Description</label>
-            <input
-              type="text"
-              name="description"
-              onChange={this.handleOnChange}
-              value={this.state.description}
-            />
-            <button onClick={this.handleSubmit}>Add</button>
-          </form>
-          <hr />
+            )}
+          />
+          <Route
+            exact
+            path={ROUTES.LANDING}
+            render={({ history }) => <Landing />}
+          />
+          <Route
+            path={ROUTES.CREATE_COURSE}
+            render={props => (
+              <CreateCourse
+                {...props}
+                state={this.state}
+                handleDeleteCourse={this.handleDeleteCourse}
+                handleUpdateCourse={this.handleUpdateCourse}
+                handleOnChange={this.handleOnChange}
+                handleSubmit={this.handleSubmit}
+              />
+            )}
+          />
           <Route
             path={ROUTES.COURSE}
             render={props => (
@@ -190,23 +191,3 @@ class App extends Component {
 }
 
 export default App;
-
-async function getCourses(options) {
-  try {
-    const fetchCourses = await fetch("/api/courses/all", options);
-    const data = await fetchCourses.json();
-    return await data;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-async function deleteCourse(options) {
-  try {
-    const delCourse = await fetch("/api/courses/deleteCourse", options);
-    const data = await delCourse.json();
-    return await data;
-  } catch (error) {
-    console.log(error);
-  }
-}

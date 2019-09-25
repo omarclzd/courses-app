@@ -32,27 +32,36 @@ class Form extends Component {
       <div>
         <h1>Add Test</h1>
         <form>
-          <label>Name</label>
-          <input
-            type="text"
-            name="name"
-            value={this.state.name}
-            onChange={this.handleChange}
-          />
-          <label>Number of Questions</label>
-          <input
-            type="number"
-            name="num_of_questions"
-            value={this.state.num_of_questions}
-            onChange={this.handleChange}
-          />
-          <label>Duration</label>
-          <input
-            type="text"
-            name="duration"
-            value={this.state.duration}
-            onChange={this.handleChange}
-          />
+          <div className="form-group">
+            <label>Name</label>
+            <input
+              type="text"
+              name="name"
+              value={this.state.name}
+              onChange={this.handleChange}
+              className="form-control"
+            />
+          </div>
+          <div className="form-group">
+            <label>Number of Questions</label>
+            <input
+              type="number"
+              name="num_of_questions"
+              value={this.state.num_of_questions}
+              onChange={this.handleChange}
+              className="form-control"
+            />
+          </div>
+          <div className="form-group">
+            <label>Duration</label>
+            <input
+              type="text"
+              name="duration"
+              value={this.state.duration}
+              onChange={this.handleChange}
+              className="form-control"
+            />
+          </div>
           <button onClick={this.handleSubmit}>Add Test</button>
         </form>
       </div>

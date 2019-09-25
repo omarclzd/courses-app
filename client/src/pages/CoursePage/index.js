@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Link } from "react-router-dom";
-import Form from "../components/Form";
-import DeleteTest from "../components/DeleteButton/DeleteTest";
-import UpdateTest from "../components/Form/UpdateTest";
-import * as ROUTES from "../constants/routes";
+import Form from "../../components/Form";
+import DeleteTest from "../../components/DeleteButton/DeleteTest";
+import UpdateTest from "../../components/Form/UpdateTest";
+import * as ROUTES from "../../constants/routes";
+
+import deleteTests from "../../utils/DeleteTests";
 
 class CoursePage extends Component {
   constructor(props) {
@@ -79,14 +81,12 @@ class CoursePage extends Component {
     );
 
     return (
-      <div>
+      <div className="container">
         <Router>
-          <h1>Course Page</h1>
-          <h2>
-            Course: {course.name}
-            <br />
-            Course Id: {course.id}
-          </h2>
+          <h2>Course: {course.name}</h2>
+          <p>Domain: {course.domain}</p>
+          <p>Description: {course.description}</p>
+
           <Form courseId={courseId} handleAddTest={this.props.handleAddTest} />
           <hr />
 
@@ -113,16 +113,6 @@ async function getTests(options) {
   try {
     const fetchTests = await fetch("/api/courses/tests", options);
     const data = await fetchTests.json();
-    return await data;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-async function deleteTests(options) {
-  try {
-    const deleteTest = await fetch("/api/courses/deleteTest", options);
-    const data = await deleteTest.json();
     return await data;
   } catch (error) {
     console.log(error);
