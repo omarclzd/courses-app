@@ -36,6 +36,7 @@ class CoursePage extends Component {
     this.getAllTests();
   }
 
+  // To populate only the test associated witht the course
   filterTests = courseId => {
     return this.state.tests.map((t, id) => {
       if (courseId === t.course_id) {
@@ -54,7 +55,7 @@ class CoursePage extends Component {
       },
       body: JSON.stringify({ id })
     };
-    return await deleteTests(options);
+    await deleteTests(options).then(() => this.getAllTests()); //Trying to update the test array after deleting
   };
 
   getTest = id => {
@@ -62,30 +63,27 @@ class CoursePage extends Component {
   };
 
   render() {
+    // this is to match the index of course from the getCourse function
     let course = this.props.getCourse(this.props.match.params.id);
 
     let courseId = course.id;
     let test = this.filterTests(courseId);
-    let tests = test ? (
-      test.map((t, id) => (
-        <tbody key={id}>
-          <tr>
-            <td>{t.name}</td>
-            <td>{t.num_of_questions}</td>
-            <td>{t.duration}</td>
+    let tests = test.map((t, id) => (
+      <tbody key={id}>
+        <tr>
+          <td>{t.name}</td>
+          <td>{t.num_of_questions}</td>
+          <td>{t.duration}</td>
 
-            <td>
-              <Link to={`/update-test/${id}`}>Edit</Link>
-            </td>
-            <td>
-              <DeleteTest id={t.id} handleDeleteTest={this.handleDeleteTest} />
-            </td>
-          </tr>
-        </tbody>
-      ))
-    ) : (
-      <p>nothing</p>
-    );
+          <td>
+            <Link to={`/update-test/${id}`}>Edit</Link>
+          </td>
+          <td>
+            <DeleteTest id={t.id} handleDeleteTest={this.handleDeleteTest} />
+          </td>
+        </tr>
+      </tbody>
+    ));
 
     return (
       <div className="container">
