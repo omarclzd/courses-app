@@ -15,8 +15,9 @@ class App extends Component {
 
     this.state = {
       courses: [],
-      test: [],
-      name: ""
+      name: "",
+      domain: "",
+      description: ""
     };
     this.handleOnChange = this.handleOnChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -37,26 +38,26 @@ class App extends Component {
     );
   }
 
-  async handleAddCourse(name) {
+  async handleAddCourse({ name, domain, description }) {
     const options = {
       method: "POST",
       headers: {
         "content-type": "application/json"
       },
-      body: JSON.stringify({ name })
+      body: JSON.stringify({ name, domain, description })
     };
     return await createCourse(options);
   }
 
-  async handleAddTest(name) {
-    // const options = {
-    //   method: "POST",
-    //   headers: {
-    //     "content-type": "application/json"
-    //   },
-    //   body: JSON.stringify({ name })
-    // };
-    // return await createTest(options);
+  async handleAddTest({ name, num_of_questions, course_id, duration }) {
+    const options = {
+      method: "POST",
+      headers: {
+        "content-type": "application/json"
+      },
+      body: JSON.stringify({ name, course_id, num_of_questions, duration })
+    };
+    return await createTest(options);
   }
 
   handleOnChange(e) {
@@ -67,18 +68,12 @@ class App extends Component {
 
   async handleSubmit(e) {
     e.preventDefault();
-    await this.handleAddCourse(this.state.name);
+    await this.handleAddCourse(this.state);
     this.setState({
-      name: ""
+      name: "",
+      domain: "",
+      description: ""
     });
-  }
-
-  async handleTestSubmit(e) {
-    e.preventDefault();
-    // await this.handleAddTest(this.state.name);
-    // this.setState({
-    //   name: ""
-    // });
   }
 
   getCourse = id => {
@@ -97,11 +92,26 @@ class App extends Component {
           ))}
           <button onClick={() => console.log(this.state)}>State</button>
           <form>
+            <label>Name</label>
             <input
               type="text"
               name="name"
               onChange={this.handleOnChange}
               value={this.state.name}
+            />
+            <label>Domain</label>
+            <input
+              type="text"
+              name="domain"
+              onChange={this.handleOnChange}
+              value={this.state.domain}
+            />
+            <label>Description</label>
+            <input
+              type="text"
+              name="description"
+              onChange={this.handleOnChange}
+              value={this.state.description}
             />
             <button onClick={this.handleSubmit}>Add</button>
           </form>
@@ -109,7 +119,11 @@ class App extends Component {
           <Route
             path={ROUTES.COURSE}
             render={props => (
-              <CoursePage {...props} getCourse={this.getCourse} />
+              <CoursePage
+                {...props}
+                getCourse={this.getCourse}
+                handleAddTest={this.handleAddTest}
+              />
             )}
           />
         </Router>
