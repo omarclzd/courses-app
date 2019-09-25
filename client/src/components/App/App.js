@@ -170,6 +170,7 @@ class App extends Component {
                 getCourse={this.getCourse}
                 handleAddTest={this.handleAddTest}
                 handleUpdateTest={this.handleUpdateTest}
+                courses={this.state.courses}
               />
             )}
           />

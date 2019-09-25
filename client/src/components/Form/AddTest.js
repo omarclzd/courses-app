@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 
-class Form extends Component {
+class AddTest extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      course_id: props.courseId,
+      course_id: this.props.courseId,
       num_of_questions: "",
       name: "",
       duration: ""
@@ -69,4 +69,4 @@ class Form extends Component {
   }
 }
 
-export default Form;
+export default AddTest;
