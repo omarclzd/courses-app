@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Link } from "react-router-dom";
-import Form from "../../components/Form";
+import AddTest from "../../components/Form/AddTest";
 import DeleteTest from "../../components/DeleteButton/DeleteTest";
 import UpdateTest from "../../components/Form/UpdateTest";
+import getTests from "../../utils/GetTests";
 import * as ROUTES from "../../constants/routes";
 
 import deleteTests from "../../utils/DeleteTests";
@@ -16,7 +17,7 @@ class CoursePage extends Component {
     };
   }
 
-  updateTest() {
+  getAllTests() {
     const options = {
       method: "POST",
       headers: {
@@ -32,7 +33,7 @@ class CoursePage extends Component {
   }
 
   componentDidMount() {
-    this.updateTest();
+    this.getAllTests();
   }
 
   filterTests = courseId => {
@@ -67,14 +68,20 @@ class CoursePage extends Component {
     let test = this.filterTests(courseId);
     let tests = test ? (
       test.map((t, id) => (
-        <div key={id}>
-          <p>
-            {t.name} id: {t.id}
-          </p>
-          <p>{t.course_id}</p>
-          <DeleteTest id={t.id} handleDeleteTest={this.handleDeleteTest} />
-          <Link to={`/update-test/${id}`}>Edit</Link>
-        </div>
+        <tbody key={id}>
+          <tr>
+            <td>{t.name}</td>
+            <td>{t.num_of_questions}</td>
+            <td>{t.duration}</td>
+
+            <td>
+              <Link to={`/update-test/${id}`}>Edit</Link>
+            </td>
+            <td>
+              <DeleteTest id={t.id} handleDeleteTest={this.handleDeleteTest} />
+            </td>
+          </tr>
+        </tbody>
       ))
     ) : (
       <p>nothing</p>
@@ -83,14 +90,40 @@ class CoursePage extends Component {
     return (
       <div className="container">
         <Router>
-          <h2>Course: {course.name}</h2>
-          <p>Domain: {course.domain}</p>
-          <p>Description: {course.description}</p>
+          <div className="row">
+            <div className="col">
+              <h2>Course: {course.name}</h2>
+              <p>Domain: {course.domain}</p>
+              <p>Description: {course.description}</p>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col">
+              <AddTest
+                courseId={courseId}
+                handleAddTest={this.props.handleAddTest}
+              />
+            </div>
+          </div>
 
-          <Form courseId={courseId} handleAddTest={this.props.handleAddTest} />
-          <hr />
+          <div className="row">
+            <div className="col">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Number of questions</th>
+                    <th>Duration</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                  </tr>
+                </thead>
 
-          {tests}
+                {tests}
+              </table>
+            </div>
+          </div>
+
           <Route
             path={ROUTES.UPDATE_TEST}
             render={props => (
@@ -108,13 +141,3 @@ class CoursePage extends Component {
 }
 
 export default CoursePage;
-
-async function getTests(options) {
-  try {
-    const fetchTests = await fetch("/api/courses/tests", options);
-    const data = await fetchTests.json();
-    return await data;
-  } catch (error) {
-    console.log(error);
-  }
-}
