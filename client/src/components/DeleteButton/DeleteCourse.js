@@ -1,14 +1,11 @@
 import React from "react";
 
-const DeleteCourse = ({ handleDeleteCourse, id, getAllCourses }) => {
-  function onClick(id) {
-    handleDeleteCourse(id)
-      .then(() => getAllCourses())
-      .catch(err => console.log(err));
-  }
-
+const DeleteCourse = ({ handleDeleteCourse, id }) => {
   return (
-    <button className="btn btn-danger btn-sm ml-3" onClick={() => onClick(id)}>
+    <button
+      className="btn btn-danger btn-sm ml-3"
+      onClick={() => handleDeleteCourse(id)}
+    >
       Delete
     </button>
   );

@@ -203,6 +203,7 @@ class App extends Component {
                 {...props}
                 getCourse={this.getCourse}
                 handleUpdateCourse={this.handleUpdateCourse}
+                getAllCourses={this.getAllCourses}
               />
             )}
           />
