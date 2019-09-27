@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "Kiler77@",
-    "database": "courses",
+    "database": "temp",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "operatorsAliases": false

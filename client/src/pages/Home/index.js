@@ -22,6 +22,7 @@ const Home = props => {
             <DeleteCourse
               id={c.id}
               handleDeleteCourse={props.handleDeleteCourse}
+              getAllCourses={props.getAllCourses}
             />
           </div>
         </div>

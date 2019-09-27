@@ -20,6 +20,7 @@ class Update extends Component {
   handleUpdateSubmit = async e => {
     e.preventDefault();
     await this.props.handleUpdateCourse(this.state);
+
     this.setState({
       name: "",
       domain: "",

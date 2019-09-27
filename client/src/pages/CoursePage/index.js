@@ -3,49 +3,19 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Link } from "react-router-dom";
 import AddTest from "../../components/Form/AddTest";
 import DeleteTest from "../../components/DeleteButton/DeleteTest";
-import UpdateTest from "../../components/Form/UpdateTest";
-import getTests from "../../utils/GetTests";
-import * as ROUTES from "../../constants/routes";
 
-import deleteTests from "../../utils/DeleteTests";
+import FetchCalls from "../../utils/Fetchcalls";
 
 class CoursePage extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      tests: []
-    };
-  }
-
-  getAllTests() {
-    const options = {
-      method: "POST",
-      headers: {
-        "content-type": "application/json"
-      }
-    };
-
-    getTests(options).then(results =>
-      this.setState({
-        tests: results
-      })
-    );
   }
 
   componentDidMount() {
-    this.getAllTests();
-  }
+    let courseId = this.props.getCourse(this.props.match.params.id).id;
 
-  // To populate only the test associated witht the course
-  filterTests = courseId => {
-    return this.state.tests.map((t, id) => {
-      if (courseId === t.course_id) {
-        return t;
-      } else {
-        return false;
-      }
-    });
-  };
+    this.props.getAllTests(courseId);
+  }
 
   handleDeleteTest = async id => {
     const options = {
@@ -55,20 +25,14 @@ class CoursePage extends Component {
       },
       body: JSON.stringify({ id })
     };
-    await deleteTests(options).then(() => this.getAllTests()); //Trying to update the test array after deleting
-  };
-
-  getTest = id => {
-    return this.state.tests[id];
+    await FetchCalls.deleteTests(options); //Trying to update the test array after deleting
   };
 
   render() {
     // this is to match the index of course from the getCourse function
     let course = this.props.getCourse(this.props.match.params.id);
-
     let courseId = course.id;
-    let test = this.filterTests(courseId);
-    let tests = test.map((t, id) => (
+    let tests = this.props.state.tests.map((t, id) => (
       <tbody key={id}>
         <tr>
           <td>{t.name}</td>
@@ -79,7 +43,12 @@ class CoursePage extends Component {
             <Link to={`/update-test/${id}`}>Edit</Link>
           </td>
           <td>
-            <DeleteTest id={t.id} handleDeleteTest={this.handleDeleteTest} />
+            <DeleteTest
+              id={t.id}
+              courseId={courseId}
+              handleDeleteTest={this.handleDeleteTest}
+              getAllTests={this.props.getAllTests}
+            />
           </td>
         </tr>
       </tbody>
@@ -100,6 +69,7 @@ class CoursePage extends Component {
               <AddTest
                 courseId={courseId}
                 handleAddTest={this.props.handleAddTest}
+                getAllTests={this.props.getAllTests}
               />
             </div>
           </div>
@@ -121,17 +91,6 @@ class CoursePage extends Component {
               </table>
             </div>
           </div>
-
-          <Route
-            path={ROUTES.UPDATE_TEST}
-            render={props => (
-              <UpdateTest
-                {...props}
-                getTest={this.getTest}
-                handleUpdateTest={this.props.handleUpdateTest}
-              />
-            )}
-          />
         </Router>
       </div>
     );

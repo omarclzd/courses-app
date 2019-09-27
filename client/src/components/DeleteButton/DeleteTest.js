@@ -1,10 +1,15 @@
 import React from "react";
 
-const DeleteTest = ({ handleDeleteTest, id }) => {
+const DeleteTest = ({ handleDeleteTest, id, courseId, getAllTests }) => {
+  function onClick(id, courseId) {
+    handleDeleteTest(id);
+    getAllTests(courseId);
+  }
+
   return (
     <button
       className="btn btn-danger btn-sm"
-      onClick={() => handleDeleteTest(id)}
+      onClick={() => onClick(id, courseId)}
     >
       X
     </button>

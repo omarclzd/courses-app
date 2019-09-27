@@ -8,14 +8,10 @@ import Navigation from "../Navigation";
 import CreateCourse from "../Form/CreateCourse";
 
 import UpdateCourse from "../Form/Update";
+import UpdateTest from "../Form/UpdateTest";
 import * as ROUTES from "../../constants/routes";
 
-import createCourse from "../../utils/CreateCourse";
-import updateCourse from "../../utils/UpdateCourse";
-import createTest from "../../utils/CreateTest";
-import updateTest from "../../utils/UpdateTest";
-import getCourses from "../../utils/GetCourses";
-import deleteCourse from "../../utils/DeleteCourse";
+import FetchCalls from "../../utils/Fetchcalls";
 import Landing from "../../pages/Landing";
 
 class App extends Component {
@@ -24,12 +20,14 @@ class App extends Component {
 
     this.state = {
       courses: [],
+      tests: [],
       name: "",
       domain: "",
       description: ""
     };
     this.handleOnChange = this.handleOnChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.getAllTests = this.getAllTests.bind(this);
   }
 
   getAllCourses() {
@@ -40,7 +38,7 @@ class App extends Component {
       }
     };
 
-    getCourses(options).then(results =>
+    FetchCalls.getCourses(options).then(results =>
       this.setState({
         courses: results
       })
@@ -59,7 +57,7 @@ class App extends Component {
       },
       body: JSON.stringify({ id })
     };
-    await deleteCourse(options);
+    await FetchCalls.deleteCourse(options);
   }
 
   async handleAddCourse({ name, domain, description }) {
@@ -70,7 +68,7 @@ class App extends Component {
       },
       body: JSON.stringify({ name, domain, description })
     };
-    await createCourse(options).then(() => this.getAllCourses());
+    await FetchCalls.createCourse(options).then(() => this.getAllCourses());
   }
 
   async handleUpdateCourse({ name, domain, description, id }) {
@@ -81,7 +79,22 @@ class App extends Component {
       },
       body: JSON.stringify({ name, domain, description, id })
     };
-    return await updateCourse(options);
+    return await FetchCalls.updateCourse(options);
+  }
+
+  getAllTests(courseId) {
+    const options = {
+      method: "POST",
+      headers: {
+        "content-type": "application/json"
+      },
+      body: JSON.stringify({ courseId })
+    };
+    FetchCalls.getTests(options).then(results =>
+      this.setState({
+        tests: results
+      })
+    );
   }
 
   async handleAddTest({ name, num_of_questions, course_id, duration }) {
@@ -92,7 +105,7 @@ class App extends Component {
       },
       body: JSON.stringify({ name, course_id, num_of_questions, duration })
     };
-    return await createTest(options);
+    return await FetchCalls.createTest(options);
   }
 
   async handleUpdateTest({ name, num_of_questions, duration, id }) {
@@ -103,7 +116,7 @@ class App extends Component {
       },
       body: JSON.stringify({ name, num_of_questions, duration, id })
     };
-    return await updateTest(options);
+    return await FetchCalls.updateTest(options);
   }
 
   handleOnChange(e) {
@@ -126,6 +139,10 @@ class App extends Component {
     return this.state.courses[id];
   };
 
+  getTest = id => {
+    return this.state.tests[id];
+  };
+
   render() {
     return (
       <div className="App">
@@ -141,6 +158,7 @@ class App extends Component {
                 handleUpdateCourse={this.handleUpdateCourse}
                 handleOnChange={this.handleOnChange}
                 handleSubmit={this.handleSubmit}
+                getAllCourses={this.getAllCourses}
               />
             )}
           />
@@ -171,6 +189,9 @@ class App extends Component {
                 handleAddTest={this.handleAddTest}
                 handleUpdateTest={this.handleUpdateTest}
                 courses={this.state.courses}
+                state={this.state}
+                getAllTests={this.getAllTests}
+                getTest={this.getTest}
               />
             )}
           />
@@ -182,6 +203,17 @@ class App extends Component {
                 {...props}
                 getCourse={this.getCourse}
                 handleUpdateCourse={this.handleUpdateCourse}
+                getAllCourses={this.getAllCourses}
+              />
+            )}
+          />
+          <Route
+            path={ROUTES.UPDATE_TEST}
+            render={props => (
+              <UpdateTest
+                {...props}
+                getTest={this.getTest}
+                handleUpdateTest={this.handleUpdateTest}
               />
             )}
           />
