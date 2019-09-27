@@ -1,7 +1,8 @@
-require("dotenv").config();
 var createError = require("http-errors");
 var express = require("express");
+var bodyParser = require("body-parser");
 var path = require("path");
+
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
@@ -23,14 +24,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 //database
-require("./src/database/connection");
+// require("./src/database/connection");
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/api/courses", require("./routes/api/courses"));
 
-// The following "catch all" route (note the *)is necessary
-// for a SPA's client-side routing to properly work
+// The following "catch all" route
+
 app.get("/*", function(req, res) {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });

@@ -12,40 +12,13 @@ import deleteTests from "../../utils/DeleteTests";
 class CoursePage extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      tests: []
-    };
-  }
-
-  getAllTests() {
-    const options = {
-      method: "POST",
-      headers: {
-        "content-type": "application/json"
-      }
-    };
-
-    getTests(options).then(results =>
-      this.setState({
-        tests: results
-      })
-    );
   }
 
   componentDidMount() {
-    this.getAllTests();
-  }
+    let courseId = this.props.getCourse(this.props.match.params.id).id;
 
-  // To populate only the test associated witht the course
-  filterTests = courseId => {
-    return this.state.tests.map((t, id) => {
-      if (courseId === t.course_id) {
-        return t;
-      } else {
-        return false;
-      }
-    });
-  };
+    this.props.getAllTests(courseId);
+  }
 
   handleDeleteTest = async id => {
     const options = {
@@ -55,20 +28,14 @@ class CoursePage extends Component {
       },
       body: JSON.stringify({ id })
     };
-    await deleteTests(options).then(() => this.getAllTests()); //Trying to update the test array after deleting
-  };
-
-  getTest = id => {
-    return this.state.tests[id];
+    await deleteTests(options); //Trying to update the test array after deleting
   };
 
   render() {
     // this is to match the index of course from the getCourse function
     let course = this.props.getCourse(this.props.match.params.id);
-
     let courseId = course.id;
-    let test = this.filterTests(courseId);
-    let tests = test.map((t, id) => (
+    let tests = this.props.state.tests.map((t, id) => (
       <tbody key={id}>
         <tr>
           <td>{t.name}</td>
@@ -121,17 +88,6 @@ class CoursePage extends Component {
               </table>
             </div>
           </div>
-
-          <Route
-            path={ROUTES.UPDATE_TEST}
-            render={props => (
-              <UpdateTest
-                {...props}
-                getTest={this.getTest}
-                handleUpdateTest={this.props.handleUpdateTest}
-              />
-            )}
-          />
         </Router>
       </div>
     );

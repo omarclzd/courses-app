@@ -1,5 +1,4 @@
-const Course = require("../src/models/course");
-const Test = require("../src/models/test");
+const models = require("../models");
 
 module.exports = {
   getAllCourses,
@@ -18,7 +17,7 @@ function updateTest(req, res) {
   let id = req.body.id;
   let duration = req.body.duration;
   let num_of_questions = req.body.num_of_questions;
-  Test.findOne({
+  models.Test.findOne({
     where: { id: id }
   })
     .then(test =>
@@ -41,7 +40,7 @@ function updateCourse(req, res) {
   let domain = req.body.domain;
   let description = req.body.description;
   let id = req.body.id;
-  Course.findOne({
+  models.Course.findOne({
     where: { id: id }
   })
     .then(course =>
@@ -54,9 +53,9 @@ function updateCourse(req, res) {
         { returning: true, where: { id: id } }
       )
     )
-    .then(course => Course.findAll())
-    .then(courses => {
-      res.status(200).json(courses);
+
+    .then(course => {
+      res.status(200).json(course);
     })
     .catch(err => console.log(err));
 }
@@ -64,12 +63,12 @@ function updateCourse(req, res) {
 function delCourse(req, res) {
   console.log(req.body);
   let id = req.body.id;
-  Course.destroy({
+  models.Course.destroy({
     where: { id: id }
   })
     .then(course =>
-      Test.destroy({
-        where: { course_id: id }
+      models.Test.destroy({
+        where: { CourseId: id }
       })
     )
     .catch(err => console.log(err));
@@ -78,29 +77,32 @@ function delCourse(req, res) {
 function delTest(req, res) {
   console.log(req.body);
   let id = req.body.id;
-  Test.destroy({
-    where: { id: id }
+  models.Test.destroy({
+    where: { id }
   })
     .then(test => res.status(201).json(test))
     .catch(err => console.log(err));
 }
 
 function getTests(req, res) {
-  Test.findAll()
+  let CourseId = req.body.courseId;
+  models.Test.findAll({
+    where: { CourseId }
+  })
     .then(tests => {
-      res.status(200).json(tests);
+      res.status(201).json(tests);
     })
     .catch(err => console.log(err));
 }
 
 function createTest(req, res) {
   let name = req.body.name;
-  let course_id = req.body.course_id;
+  let CourseId = req.body.course_id;
   let duration = req.body.duration;
   let num_of_questions = req.body.num_of_questions;
   console.log(req.body);
-  Test.create({
-    course_id,
+  models.Test.create({
+    CourseId,
     num_of_questions,
     name,
     duration
@@ -110,7 +112,7 @@ function createTest(req, res) {
 }
 
 function getAllCourses(req, res) {
-  Course.findAll()
+  models.Course.findAll()
     .then(courses => {
       res.status(200).json(courses);
     })
@@ -122,7 +124,7 @@ function createCourse(req, res) {
   let domain = req.body.domain;
   let description = req.body.description;
   console.log(req.body);
-  Course.create({
+  models.Course.create({
     name,
     domain,
     description

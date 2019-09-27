@@ -2,8 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    // Return promise
-    return queryInterface.createTable("courses", {
+    return queryInterface.createTable("Courses", {
       id: {
         type: Sequelize.INTEGER(10),
         allowNull: false,
@@ -28,7 +27,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    //Return a promise that drops a table in case of (migration:undo)
-    return queryInterface.dropTable("courses");
+    return queryInterface.dropTable("Courses");
   }
 };

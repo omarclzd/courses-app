@@ -2,17 +2,23 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("tests", {
+    return queryInterface.createTable("Tests", {
       id: {
         type: Sequelize.INTEGER(10),
         allowNull: false,
         autoIncrement: true,
         primaryKey: true
       },
-      course_id: {
+      CourseId: {
         type: Sequelize.INTEGER(10),
-        allowNull: false
+        onDelete: "CASCADE",
+        allowNull: false,
+        reference: {
+          model: "Courses",
+          key: "id"
+        }
       },
+
       num_of_questions: {
         type: Sequelize.INTEGER(10),
         allowNull: false
@@ -32,6 +38,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("tests");
+    return queryInterface.dropTable("Tests");
   }
 };
