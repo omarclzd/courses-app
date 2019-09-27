@@ -1,5 +1,4 @@
 import React from "react";
-import getCourses from "../../utils/GetCourses";
 
 const CreateCourse = props => {
   return (

@@ -100,7 +100,7 @@ function createTest(req, res) {
   let CourseId = req.body.course_id;
   let duration = req.body.duration;
   let num_of_questions = req.body.num_of_questions;
-  console.log(req.body);
+
   models.Test.create({
     CourseId,
     num_of_questions,

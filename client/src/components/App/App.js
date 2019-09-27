@@ -11,13 +11,7 @@ import UpdateCourse from "../Form/Update";
 import UpdateTest from "../Form/UpdateTest";
 import * as ROUTES from "../../constants/routes";
 
-import createCourse from "../../utils/CreateCourse";
-import updateCourse from "../../utils/UpdateCourse";
-import createTest from "../../utils/CreateTest";
-import updateTest from "../../utils/UpdateTest";
-import getCourses from "../../utils/GetCourses";
-import deleteCourse from "../../utils/DeleteCourse";
-import getTests from "../../utils/GetTests";
+import FetchCalls from "../../utils/Fetchcalls";
 import Landing from "../../pages/Landing";
 
 class App extends Component {
@@ -44,7 +38,7 @@ class App extends Component {
       }
     };
 
-    getCourses(options).then(results =>
+    FetchCalls.getCourses(options).then(results =>
       this.setState({
         courses: results
       })
@@ -63,7 +57,7 @@ class App extends Component {
       },
       body: JSON.stringify({ id })
     };
-    await deleteCourse(options);
+    await FetchCalls.deleteCourse(options);
   }
 
   async handleAddCourse({ name, domain, description }) {
@@ -74,7 +68,7 @@ class App extends Component {
       },
       body: JSON.stringify({ name, domain, description })
     };
-    await createCourse(options).then(() => this.getAllCourses());
+    await FetchCalls.createCourse(options).then(() => this.getAllCourses());
   }
 
   async handleUpdateCourse({ name, domain, description, id }) {
@@ -85,7 +79,7 @@ class App extends Component {
       },
       body: JSON.stringify({ name, domain, description, id })
     };
-    return await updateCourse(options);
+    return await FetchCalls.updateCourse(options);
   }
 
   getAllTests(courseId) {
@@ -96,7 +90,7 @@ class App extends Component {
       },
       body: JSON.stringify({ courseId })
     };
-    getTests(options).then(results =>
+    FetchCalls.getTests(options).then(results =>
       this.setState({
         tests: results
       })
@@ -111,7 +105,7 @@ class App extends Component {
       },
       body: JSON.stringify({ name, course_id, num_of_questions, duration })
     };
-    return await createTest(options);
+    return await FetchCalls.createTest(options);
   }
 
   async handleUpdateTest({ name, num_of_questions, duration, id }) {
@@ -122,7 +116,7 @@ class App extends Component {
       },
       body: JSON.stringify({ name, num_of_questions, duration, id })
     };
-    return await updateTest(options);
+    return await FetchCalls.updateTest(options);
   }
 
   handleOnChange(e) {
@@ -164,6 +158,7 @@ class App extends Component {
                 handleUpdateCourse={this.handleUpdateCourse}
                 handleOnChange={this.handleOnChange}
                 handleSubmit={this.handleSubmit}
+                getAllCourses={this.getAllCourses}
               />
             )}
           />

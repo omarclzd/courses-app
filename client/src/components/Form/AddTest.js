@@ -19,7 +19,9 @@ class AddTest extends Component {
 
   handleSubmit = async e => {
     e.preventDefault();
+    let courseId = this.props.courseId;
     await this.props.handleAddTest(this.state);
+    this.props.getAllTests(courseId);
     this.setState({
       name: "",
       duration: "",
