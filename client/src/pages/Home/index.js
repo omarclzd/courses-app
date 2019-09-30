@@ -19,11 +19,14 @@ const Home = props => {
             <Link to={`/update-course/${id}`} className="card-link">
               Edit
             </Link>
-            <DeleteCourse
+            <Link to={`/delete-confirm/${id}`} className="card-link">
+              Delete
+            </Link>
+            {/* <DeleteCourse
               id={c.id}
               handleDeleteCourse={props.handleDeleteCourse}
               getAllCourses={props.getAllCourses}
-            />
+            /> */}
           </div>
         </div>
       ))}

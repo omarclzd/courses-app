@@ -66,11 +66,15 @@ function delCourse(req, res) {
   models.Course.destroy({
     where: { id: id }
   })
-    .then(course =>
+    .then(course => {
+      res.status(201).json(course);
+    })
+    .then(() => {
       models.Test.destroy({
         where: { CourseId: id }
-      })
-    )
+      });
+    })
+
     .catch(err => console.log(err));
 }
 

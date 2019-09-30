@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import CoursePage from "../../pages/CoursePage";
 import Home from "../../pages/Home";
+import DeleteConfirm from "../../pages/DeleteConfirm";
 import Navigation from "../Navigation";
 import CreateCourse from "../Form/CreateCourse";
 
@@ -192,6 +193,20 @@ class App extends Component {
                 state={this.state}
                 getAllTests={this.getAllTests}
                 getTest={this.getTest}
+              />
+            )}
+          />
+          <Route
+            path={ROUTES.DELCONFIRM}
+            render={props => (
+              <DeleteConfirm
+                {...props}
+                getCourse={this.getCourse}
+                state={this.state}
+                getAllTests={this.getAllTests}
+                getTest={this.getTest}
+                handleDeleteCourse={this.handleDeleteCourse}
+                getAllCourses={this.getAllCourses}
               />
             )}
           />
