@@ -5,3 +5,4 @@ export const UPDATE_COURSE = "/update-course/:id";
 export const UPDATE_TEST = "/update-test/:id";
 export const CREATE_COURSE = "/create-course";
 export const ADD_TEST = "/add-test/:id";
+export const DELCONFIRM = "/delete-confirm/:id";

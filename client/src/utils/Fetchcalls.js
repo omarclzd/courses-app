@@ -1,7 +1,6 @@
 const BASE_URL = "/api/courses/";
 
 class FetchCalls {
-  constructor() {}
   async createCourse(options) {
     try {
       const sendPost = await fetch(BASE_URL + "create", options);
@@ -16,16 +15,6 @@ class FetchCalls {
     try {
       const fetchCourses = await fetch(BASE_URL + "all", options);
       const data = await fetchCourses.json();
-      return await data;
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  async deleteCourse(options) {
-    try {
-      const delCourse = await fetch(BASE_URL + "deleteCourse", options);
-      const data = await delCourse.json();
       return await data;
     } catch (error) {
       console.log(error);
